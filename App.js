@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Vibration } from 'react-native';
 
 export default class App extends React.Component {
   constructor(props) {
     super (props)
     this.state = {
-      time : 25 * 60,
-      minutes : 25,
+      time : 1 * 60,
+      minutes : 1,
       seconds : 0,
       isPaused : false,
     }
@@ -19,13 +19,20 @@ export default class App extends React.Component {
   }
 
   updateTime = () => {
-    if (!this.state.isPaused){
-      this.setState(prevState => ({
-        minutes : Math.floor(prevState.time/60),
-        seconds : prevState.time % 60,
-        time : prevState.time - 1,
-      }))
+    if (this.state.time >= 0){
+      if (!this.state.isPaused ){
+        this.setState(prevState => ({
+          minutes : Math.floor(prevState.time/60),
+          seconds : prevState.time % 60,
+          time : prevState.time - 1,
+        }))
+      }
     }
+    else {
+      Vibration.vibrate([500, 500, 500])
+      console.log('vibrating')
+    }
+    
   }
 
   pause = () =>{
