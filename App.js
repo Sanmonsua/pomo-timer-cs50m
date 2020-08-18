@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -9,6 +9,7 @@ export default class App extends React.Component {
       time : 25 * 60,
       minutes : 25,
       seconds : 0,
+      isPaused : false,
     }
     
   }
@@ -18,17 +19,37 @@ export default class App extends React.Component {
   }
 
   updateTime = () => {
-    this.setState(prevState => ({
-      minutes : Math.floor(prevState.time/60),
-      seconds : prevState.time % 60,
-      time : prevState.time - 1,
-    }))
+    if (!this.state.isPaused){
+      this.setState(prevState => ({
+        minutes : Math.floor(prevState.time/60),
+        seconds : prevState.time % 60,
+        time : prevState.time - 1,
+      }))
+    }
+  }
+
+  pause = () =>{
+    this.setState({
+      isPaused : true,
+    })
+  }
+
+  play = () =>{
+    this.setState({
+      isPaused : false,
+    })
   }
   
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.time}>{this.state.minutes} : {this.state.seconds < 10 ? '0' + this.state.seconds : this.state.seconds}</Text>
+        <View style={styles.controllers}>
+          <View style={styles.buttons}><Button title='Pause' onPress={this.pause}/></View>
+          <View style={styles.buttons}><Button title='Play' onPress={this.play}/></View>
+          
+        </View>
+        
         <StatusBar style="auto" />
       </View>
     )
@@ -45,5 +66,15 @@ const styles = StyleSheet.create({
   },
   time : {
     fontSize: 60,
+  },
+  controllers : {
+    flexDirection: 'row',
+    justifyContent : "space-between",
+  },
+
+  buttons : {
+    padding : 10,
+    height : 70,
+    width : '40%',
   }
 });
